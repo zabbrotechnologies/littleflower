@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 
@@ -30,16 +31,30 @@ export default function CrmSidebar({
   setActiveTab,
   collapsed,
   setCollapsed,
+  mobileOpen = false,
+  onMobileClose,
   counts = {},
   onClose,
   onLogout,
 }) {
+  const handleSelectTab = (id) => {
+    setActiveTab(id);
+    if (onMobileClose) onMobileClose();
+  };
+
   return (
-    <aside
-      className={`bg-white border-r border-[#E8EDF3] flex flex-col justify-between transition-all duration-200 z-30 shrink-0 ${
-        collapsed ? 'w-[72px]' : 'w-64'
-      }`}
-    >
+    <>
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-xs lg:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 lg:static bg-white border-r border-[#E8EDF3] flex flex-col justify-between transition-all duration-200 shrink-0 ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } ${collapsed ? 'lg:w-[72px] w-64' : 'w-64'}`}
+      >
       <div>
         {/* Brand Header */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-[#E8EDF3]">
@@ -63,10 +78,17 @@ export default function CrmSidebar({
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-md text-[#64748B] hover:text-[#172033] hover:bg-slate-100 transition-colors hidden sm:flex items-center justify-center"
+            className="p-1.5 rounded-md text-[#64748B] hover:text-[#172033] hover:bg-slate-100 transition-colors hidden lg:flex items-center justify-center"
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={onMobileClose}
+            className="p-1.5 rounded-md text-[#64748B] hover:text-[#172033] hover:bg-slate-100 transition-colors lg:hidden"
+            aria-label="Close CRM menu"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -77,7 +99,7 @@ export default function CrmSidebar({
             return (
               <button
                 key={id}
-                onClick={() => setActiveTab(id)}
+                onClick={() => handleSelectTab(id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-left cursor-pointer group relative ${
                   isActive
                     ? 'bg-[#EEF2FF] text-[#4F46E5] font-semibold'
@@ -136,5 +158,6 @@ export default function CrmSidebar({
         </div>
       </div>
     </aside>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { Search, Database, Smartphone, Bell, ChevronRight, User } from 'lucide-react';
+import { Search, Bell, ChevronRight, Menu } from 'lucide-react';
 
 const titleMap = {
   dashboard: 'Dashboard Overview',
@@ -17,14 +17,23 @@ export default function CrmHeader({
   searchQuery,
   setSearchQuery,
   onClose,
+  onMobileMenuClick,
   dueCount = 0,
 }) {
   return (
-    <header className="h-16 bg-white border-b border-[#E8EDF3] px-6 flex items-center justify-between gap-4 shrink-0">
-      {/* Left: Breadcrumbs & Title */}
+    <header className="h-14 sm:h-16 bg-white border-b border-[#E8EDF3] px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 shrink-0">
+      {/* Left: Mobile Menu + Breadcrumbs & Title */}
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-xs font-medium text-[#64748B]">CRM</span>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+        <button
+          type="button"
+          onClick={onMobileMenuClick}
+          className="lg:hidden p-1.5 rounded-lg text-[#172033] hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
+          aria-label="Open CRM menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <span className="hidden sm:inline text-xs font-medium text-[#64748B]">CRM</span>
+        <ChevronRight className="hidden sm:inline w-3.5 h-3.5 text-slate-300 shrink-0" />
         <h1 className="text-sm sm:text-base font-semibold text-[#172033] truncate">
           {titleMap[activeTab] || 'Dashboard'}
         </h1>

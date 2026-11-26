@@ -16,6 +16,7 @@ import EditStudentModal from './crm/EditStudentModal';
 export default function AdminDashboard({ onClose, onLogout }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [waStatus, setWaStatus] = useState({ status: 'disconnected', phoneNumber: null, qrCodeDataUrl: null });
   const [admissions, setAdmissions] = useState([]);
   const [dueReminders, setDueReminders] = useState([]);
@@ -275,6 +276,8 @@ export default function AdminDashboard({ onClose, onLogout }) {
         setActiveTab={setActiveTab}
         collapsed={sidebarCollapsed}
         setCollapsed={setSidebarCollapsed}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
         counts={{
           students: admissions.length,
           reminders: dueReminders.length,
@@ -284,7 +287,7 @@ export default function AdminDashboard({ onClose, onLogout }) {
       />
 
       {/* ── MAIN CONTENT AREA ── */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
         {/* Top Header */}
         <CrmHeader
           activeTab={activeTab}
@@ -292,6 +295,7 @@ export default function AdminDashboard({ onClose, onLogout }) {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onClose={onClose}
+          onMobileMenuClick={() => setMobileSidebarOpen(true)}
           dueCount={dueReminders.length}
         />
 
@@ -317,7 +321,7 @@ export default function AdminDashboard({ onClose, onLogout }) {
         )}
 
         {/* Scrollable View Container */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 overflow-y-auto overflow-x-hidden">
           {activeTab === 'dashboard' && (
             <DashboardView
               admissions={admissions}
