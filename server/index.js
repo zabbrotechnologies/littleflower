@@ -180,13 +180,14 @@ app.post('/api/admissions', async (req, res) => {
 
     const createdAdmission = insertResult.rows[0];
 
-    // 2. Automatically dispatch admission bill to parent's WhatsApp
+    // 2. Automatically dispatch admission bill (with Professional PDF) to parent's WhatsApp
     const billMessage = formatAdmissionBillMessage(createdAdmission);
     const waDispatch = await sendWhatsAppMessage({
       admissionId: createdAdmission.id,
       type: 'bill',
       phone: parentPhone,
       message: billMessage,
+      admission: createdAdmission,
     });
 
     res.json({

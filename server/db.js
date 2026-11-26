@@ -94,6 +94,12 @@ export async function initSchema() {
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS whatsapp_auth_keys (
+      key_id TEXT PRIMARY KEY,
+      key_data TEXT NOT NULL,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+
     -- Safe non-breaking schema expansions for commercial CRM fields
     ALTER TABLE admissions ADD COLUMN IF NOT EXISTS admission_fee NUMERIC(10, 2) DEFAULT 0;
     ALTER TABLE admissions ADD COLUMN IF NOT EXISTS monthly_fee NUMERIC(10, 2) DEFAULT 0;
