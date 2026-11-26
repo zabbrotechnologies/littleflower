@@ -186,14 +186,12 @@ export default function WhatsAppView({
                 >
                   {waStatus?.qrCodeDataUrl ? 'Regenerate QR' : 'Generate QR Code'}
                 </button>
-                <button
-                  onClick={onConfirmLink}
-                  disabled={loading}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-                >
-                  Confirm Linked
-                </button>
               </div>
+              {waStatus?.status === 'qr_ready' && (
+                <p className="text-[11px] text-emerald-600 font-medium mt-2">
+                  Waiting for scan from your phone...
+                </p>
+              )}
             </div>
 
             {/* Steps */}
@@ -203,7 +201,7 @@ export default function WhatsAppView({
                 <li>Open WhatsApp on the academy smartphone.</li>
                 <li>Go to <b>Settings</b> or <b>Linked Devices</b>.</li>
                 <li>Tap <b>Link a Device</b> and point camera at this QR.</li>
-                <li>Click <b>Confirm Linked</b> to persist session in Neon DB.</li>
+                <li>It will automatically connect &amp; show your WhatsApp number.</li>
               </ol>
             </div>
           </div>

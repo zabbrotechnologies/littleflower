@@ -1,5 +1,21 @@
 import QRCode from 'qrcode';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import pino from 'pino';
+import makeWASocket, {
+  DisconnectReason,
+  useMultiFileAuthState,
+  fetchLatestBaileysVersion,
+} from '@whiskeysockets/baileys';
 import { query } from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const AUTH_DIR = path.join(__dirname, 'wa_auth');
+
+let sock = null;
+let lastMessageAt = 0;
 
 // In-memory session tracking synced with Neon DB
 let currentSession = {
@@ -10,73 +26,224 @@ let currentSession = {
   lastConnected: null,
 };
 
-// Initialize session state from Neon DB
+function formatPhoneFromJid(jid) {
+  if (!jid) return null;
+  const digits = jid.split(':')[0].split('@')[0].replace(/\D/g, '');
+  if (!digits) return null;
+  if (digits.startsWith('91') && digits.length === 12) {
+    return `+91 ${digits.slice(2, 7)} ${digits.slice(7)}`;
+  }
+  return `+${digits}`;
+}
+
+function toWhatsAppJid(phone) {
+  let digits = String(phone || '').replace(/\D/g, '');
+  if (digits.length === 10) {
+    digits = '91' + digits;
+  }
+  return `${digits}@s.whatsapp.net`;
+}
+
+function clearAuthDir() {
+  try {
+    if (fs.existsSync(AUTH_DIR)) {
+      fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    }
+  } catch (err) {
+    console.error('[WhatsApp Engine] Error clearing auth dir:', err.message);
+  }
+}
+
+async function startSocket({ waitForQr = false } = {}) {
+  if (sock) {
+    try {
+      sock.end(undefined);
+    } catch {}
+    sock = null;
+  }
+
+  if (!fs.existsSync(AUTH_DIR)) {
+    fs.mkdirSync(AUTH_DIR, { recursive: true });
+  }
+
+  const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
+  const { version } = await fetchLatestBaileysVersion();
+
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const timeout = waitForQr
+      ? setTimeout(() => {
+          if (!settled) {
+            settled = true;
+            reject(new Error('Timed out waiting for WhatsApp QR code. Please try again.'));
+          }
+        }, 20000)
+      : null;
+
+    sock = makeWASocket({
+      version,
+      auth: state,
+      logger: pino({ level: 'silent' }),
+      browser: ['Little Flowers Academy', 'Chrome', '120.0.0'],
+      printQRInTerminal: false,
+      connectTimeoutMs: 20000,
+    });
+
+    sock.ev.on('creds.update', saveCreds);
+
+    sock.ev.on('connection.update', async (update) => {
+      const { connection, lastDisconnect, qr } = update;
+
+      if (qr) {
+        try {
+          const qrCodeDataUrl = await QRCode.toDataURL(qr, {
+            errorCorrectionLevel: 'M',
+            margin: 2,
+            color: { dark: '#1E293B', light: '#FFFFFF' },
+            width: 280,
+          });
+
+          currentSession.status = 'qr_ready';
+          currentSession.qrCodeDataUrl = qrCodeDataUrl;
+
+          await query(`
+            UPDATE whatsapp_sessions
+            SET status = 'qr_ready', qr_data = $1, updated_at = NOW()
+            WHERE id = 'primary'
+          `, [qrCodeDataUrl]).catch(() => {});
+
+          if (waitForQr && !settled) {
+            settled = true;
+            clearTimeout(timeout);
+            resolve({
+              status: 'qr_ready',
+              qrCodeDataUrl,
+              message: 'Scan this real WhatsApp QR code with WhatsApp > Linked Devices.',
+            });
+          }
+        } catch (err) {
+          if (waitForQr && !settled) {
+            settled = true;
+            clearTimeout(timeout);
+            reject(err);
+          }
+        }
+      }
+
+      if (connection === 'open') {
+        const realPhone = formatPhoneFromJid(sock?.user?.id);
+        currentSession.status = 'connected';
+        currentSession.phoneNumber = realPhone || 'Connected';
+        currentSession.qrCodeDataUrl = null;
+        currentSession.lastConnected = new Date().toISOString();
+
+        await query(`
+          UPDATE whatsapp_sessions
+          SET status = 'connected', phone_number = $1, qr_data = NULL, last_connected_at = NOW(), updated_at = NOW()
+          WHERE id = 'primary'
+        `, [currentSession.phoneNumber]).catch(() => {});
+
+        console.log(`[WhatsApp Engine] Real WhatsApp connected: ${currentSession.phoneNumber}`);
+
+        if (waitForQr && !settled) {
+          settled = true;
+          clearTimeout(timeout);
+          resolve({
+            status: 'connected',
+            phoneNumber: currentSession.phoneNumber,
+            qrCodeDataUrl: null,
+          });
+        }
+      }
+
+      if (connection === 'close') {
+        const statusCode = lastDisconnect?.error?.output?.statusCode;
+        const loggedOut = statusCode === DisconnectReason.loggedOut;
+
+        if (loggedOut) {
+          console.log('[WhatsApp Engine] Logged out from mobile device.');
+          clearAuthDir();
+          currentSession.status = 'disconnected';
+          currentSession.phoneNumber = null;
+          currentSession.qrCodeDataUrl = null;
+          await query(`
+            UPDATE whatsapp_sessions
+            SET status = 'disconnected', phone_number = NULL, qr_data = NULL, updated_at = NOW()
+            WHERE id = 'primary'
+          `).catch(() => {});
+        } else if (currentSession.status === 'connected' || fs.existsSync(path.join(AUTH_DIR, 'creds.json'))) {
+          // Auto-reconnect on transient network drop
+          console.log('[WhatsApp Engine] Connection interrupted, reconnecting...');
+          setTimeout(() => {
+            startSocket({ waitForQr: false }).catch((e) =>
+              console.error('[WhatsApp Engine] Reconnect error:', e.message)
+            );
+          }, 3000);
+        }
+      }
+    });
+
+    if (!waitForQr) {
+      settled = true;
+      resolve(currentSession);
+    }
+  });
+}
+
+// Initialize session state on server startup
 export async function loadWhatsAppSession() {
   try {
     const res = await query('SELECT * FROM whatsapp_sessions WHERE id = $1', ['primary']);
     if (res.rows.length > 0) {
       const row = res.rows[0];
-      currentSession.status = row.status || 'disconnected';
-      currentSession.phoneNumber = row.phone_number || null;
-      currentSession.lastConnected = row.last_connected_at || null;
       currentSession.antiBanProtection = row.anti_ban_mode ?? true;
-      console.log(`[WhatsApp Engine] Loaded session state from Neon: ${currentSession.status} (${currentSession.phoneNumber || 'None'})`);
+    }
+
+    // Only auto-connect if real Baileys credentials exist on disk
+    if (fs.existsSync(path.join(AUTH_DIR, 'creds.json'))) {
+      console.log('[WhatsApp Engine] Found saved credentials, restoring WhatsApp session...');
+      await startSocket({ waitForQr: false });
+    } else {
+      currentSession.status = 'disconnected';
+      currentSession.phoneNumber = null;
+      currentSession.qrCodeDataUrl = null;
+      await query(`
+        UPDATE whatsapp_sessions
+        SET status = 'disconnected', phone_number = NULL, qr_data = NULL, updated_at = NOW()
+        WHERE id = 'primary'
+      `).catch(() => {});
+      console.log('[WhatsApp Engine] No paired device yet. Waiting for real QR scan.');
     }
   } catch (err) {
-    console.error('[WhatsApp Engine] Error loading session from DB:', err.message);
+    console.error('[WhatsApp Engine] Error loading session:', err.message);
   }
 }
 
-// Generate linking QR Code
+// Generate REAL WhatsApp Web pairing QR Code
 export async function generateLinkingQR() {
-  const sessionId = 'LFA_WA_' + Math.random().toString(36).substring(2, 10).toUpperCase();
-  const pairingPayload = `2@${sessionId},${Date.now()},LFA_ACADEMY_AUTH`;
-  
-  const qrCodeDataUrl = await QRCode.toDataURL(pairingPayload, {
-    errorCorrectionLevel: 'H',
-    margin: 2,
-    color: {
-      dark: '#1E293B',
-      light: '#FFFFFF',
-    },
-    width: 280,
-  });
-
-  currentSession.status = 'qr_ready';
-  currentSession.qrCodeDataUrl = qrCodeDataUrl;
-
-  await query(`
-    UPDATE whatsapp_sessions
-    SET status = 'qr_ready', qr_data = $1, updated_at = NOW()
-    WHERE id = 'primary'
-  `, [qrCodeDataUrl]);
-
-  return {
-    status: 'qr_ready',
-    qrCodeDataUrl,
-    message: 'Scan this QR code with WhatsApp > Linked Devices to connect automation.',
-  };
+  // Start fresh auth if not currently connected so WhatsApp emits a valid pairing QR
+  if (currentSession.status !== 'connected') {
+    clearAuthDir();
+  }
+  return await startSocket({ waitForQr: true });
 }
 
-// Confirm device link (persistent until manual logout)
-export async function confirmWhatsAppLink(phoneNumber = '+91 98765 43210') {
-  currentSession.status = 'connected';
-  currentSession.phoneNumber = phoneNumber;
-  currentSession.qrCodeDataUrl = null;
-  currentSession.lastConnected = new Date().toISOString();
-
-  await query(`
-    UPDATE whatsapp_sessions
-    SET status = 'connected', phone_number = $1, qr_data = NULL, last_connected_at = NOW(), updated_at = NOW()
-    WHERE id = 'primary'
-  `, [phoneNumber]);
-
-  console.log(`[WhatsApp Engine] Device linked successfully: ${phoneNumber}. Session persisted in Neon.`);
+// Confirm device link (returns live status; real pairing happens automatically on QR scan)
+export async function confirmWhatsAppLink() {
   return currentSession;
 }
 
 // Disconnect / Unlink session
 export async function disconnectWhatsApp() {
+  try {
+    if (sock) {
+      await sock.logout().catch(() => {});
+      sock.end(undefined);
+      sock = null;
+    }
+  } catch {}
+
+  clearAuthDir();
   currentSession.status = 'disconnected';
   currentSession.phoneNumber = null;
   currentSession.qrCodeDataUrl = null;
@@ -152,15 +319,23 @@ Kindly complete the renewal on or before the due date to ensure uninterrupted cl
 Thank you for your continued trust in Little Flowers Academy!`;
 }
 
-// Send WhatsApp message with anti-ban rate limiting
+// Send REAL WhatsApp message with anti-ban rate limiting
 export async function sendWhatsAppMessage({ admissionId, type, phone, message }) {
-  if (currentSession.status !== 'connected') {
-    throw new Error('WhatsApp is not linked. Please connect WhatsApp in the Linking tab first.');
+  if (currentSession.status !== 'connected' || !sock) {
+    throw new Error('WhatsApp is not linked. Please scan the QR code in WhatsApp Settings first.');
   }
 
-  // Anti-ban simulation and audit record:
-  // Strictly only transactional bills & due reminders, with humanized pacing
-  console.log(`[WhatsApp Anti-Ban Engine] Dispatching ${type} to ${phone}...`);
+  // Anti-ban humanized pacing: minimum 2.5s between messages
+  const now = Date.now();
+  const elapsed = now - lastMessageAt;
+  if (elapsed < 2500) {
+    await new Promise((r) => setTimeout(r, 2500 - elapsed));
+  }
+
+  const jid = toWhatsAppJid(phone);
+  console.log(`[WhatsApp Anti-Ban Engine] Sending real ${type} to ${jid}...`);
+  await sock.sendMessage(jid, { text: message });
+  lastMessageAt = Date.now();
 
   // Record dispatch in Neon DB
   const result = await query(`

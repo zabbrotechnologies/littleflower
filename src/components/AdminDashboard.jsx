@@ -98,6 +98,13 @@ export default function AdminDashboard({ onClose, onLogout }) {
     return () => clearInterval(interval);
   }, [fetchWhatsAppStatus, fetchAdmissions, fetchDueReminders, fetchAnalytics]);
 
+  // Fast-poll WhatsApp status while QR is displayed so scan auto-connects immediately
+  useEffect(() => {
+    if (waStatus?.status !== 'qr_ready') return;
+    const fastInterval = setInterval(fetchWhatsAppStatus, 2500);
+    return () => clearInterval(fastInterval);
+  }, [waStatus?.status, fetchWhatsAppStatus]);
+
   // WhatsApp actions
   const handleGenerateQR = async () => {
     setLoading(true);
