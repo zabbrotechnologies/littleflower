@@ -121,7 +121,7 @@ export default function Navbar({ onAdminClick }) {
                 <button
                   type="button"
                   onClick={() => onAdminClick && onAdminClick()}
-                  className="liquid-glass-btn inline-flex items-center gap-1.5 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full cursor-pointer"
+                  className="liquid-glass-btn hidden lg:inline-flex items-center gap-1.5 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full cursor-pointer"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Admin Login</span>
