@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Menu } from 'lucide-react';
 import heroBg from '../assets/hero-bg.jpg';
 import logoImg from '../assets/logo.png';
 
-export default function Hero({ onAdminClick }) {
+export default function Hero({ onAdminClick, onMenuClick }) {
   const heroRef = useRef(null);
 
   // ── Parallax Scroll Effect for Hero Background ──
@@ -166,15 +166,23 @@ export default function Hero({ onAdminClick }) {
             </a>
           </nav>
 
-          {/* Right: Admin Login Glassy Button */}
-          <div>
+          {/* Right: Admin Login Glassy Button (Desktop) & Mobile Drawer Toggle */}
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onAdminClick && onAdminClick()}
-              className="liquid-glass-btn inline-flex items-center gap-1.5 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full cursor-pointer"
+              className="liquid-glass-btn hidden lg:inline-flex items-center gap-1.5 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-full cursor-pointer"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Admin Login</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onMenuClick && onMenuClick()}
+              className="lg:hidden p-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-md transition-colors cursor-pointer"
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
             </button>
           </div>
         </div>

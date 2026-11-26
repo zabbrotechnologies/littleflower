@@ -20,6 +20,7 @@ function App() {
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
   const [adminUser, setAdminUser] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleOpenAdminLogin = () => {
     if (adminUser) {
@@ -41,9 +42,16 @@ function App() {
 
   return (
     <div className="min-h-screen text-[#252525] selection:bg-[#DCEBDD] selection:text-[#24543D] font-body relative overflow-x-hidden antialiased">
-      <Navbar onAdminClick={handleOpenAdminLogin} />
+      <Navbar
+        onAdminClick={handleOpenAdminLogin}
+        isOpen={mobileMenuOpen}
+        setIsOpen={setMobileMenuOpen}
+      />
       <main>
-        <Hero onAdminClick={handleOpenAdminLogin} />
+        <Hero
+          onAdminClick={handleOpenAdminLogin}
+          onMenuClick={() => setMobileMenuOpen(true)}
+        />
         <TrustHighlights />
         <About />
         <LearningPhilosophy />

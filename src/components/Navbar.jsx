@@ -14,8 +14,10 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
-export default function Navbar({ onAdminClick }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen: setControlledOpen }) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsOpen = setControlledOpen !== undefined ? setControlledOpen : setInternalOpen;
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
