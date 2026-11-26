@@ -69,8 +69,8 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-6 lg:inset-x-10 z-50 mx-auto max-w-7xl"
           >
-            {/* ── Translucent Liquid Glass Pill Container ── */}
-            <div className="liquid-glass-nav rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between">
+            {/* ── Translucent Liquid Glass Pill Container (Matches Hero Navbar) ── */}
+            <div className="liquid-glass-nav-hero bg-slate-900/55 rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between">
               {/* Brand Logo & Title */}
               <a
                 href="#home"
@@ -86,10 +86,10 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                   />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="font-headline font-bold text-base sm:text-lg text-[#1E293B] tracking-tight">
+                  <span className="font-headline font-bold text-base sm:text-lg text-white tracking-tight">
                     Little Flowers
                   </span>
-                  <span className="text-[10px] uppercase tracking-widest text-[#E91E63] font-bold -mt-0.5">
+                  <span className="text-[10px] uppercase tracking-widest text-amber-400 font-bold -mt-0.5">
                     Academy
                   </span>
                 </div>
@@ -107,8 +107,8 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                         onClick={(e) => handleNavClick(e, href)}
                         className={`text-xs xl:text-sm font-semibold tracking-wide transition-all duration-200 px-3.5 py-1.5 rounded-full ${
                           isActive
-                            ? 'liquid-glass-pill-active text-[#E91E63] font-bold'
-                            : 'text-[#1E293B]/80 hover:text-[#1E293B] hover:bg-white/60'
+                            ? 'bg-white/25 text-white font-bold shadow-xs'
+                            : 'text-white/85 hover:text-white hover:bg-white/15'
                         }`}
                       >
                         {label}
@@ -132,7 +132,7 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                 {/* Mobile Hamburger Button */}
                 <button
                   onClick={() => setIsOpen((v) => !v)}
-                  className="lg:hidden p-1.5 text-[#1E293B] hover:opacity-75 transition-opacity cursor-pointer"
+                  className="lg:hidden p-1.5 text-white hover:opacity-75 transition-opacity cursor-pointer"
                   aria-label={isOpen ? 'Close menu' : 'Open menu'}
                 >
                   {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
