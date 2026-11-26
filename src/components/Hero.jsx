@@ -179,10 +179,10 @@ export default function Hero({ onAdminClick, onMenuClick }) {
             <button
               type="button"
               onClick={() => onMenuClick && onMenuClick()}
-              className="lg:hidden p-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white border border-white/40 backdrop-blur-md transition-colors cursor-pointer"
+              className="lg:hidden p-1.5 text-white hover:opacity-80 transition-opacity cursor-pointer"
               aria-label="Open menu"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>

@@ -132,10 +132,10 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                 {/* Mobile Hamburger Button */}
                 <button
                   onClick={() => setIsOpen((v) => !v)}
-                  className="lg:hidden p-2 rounded-xl bg-white/90 hover:bg-white text-[#1E293B] border border-slate-200 shadow-xs transition-colors"
+                  className="lg:hidden p-1.5 text-[#1E293B] hover:opacity-75 transition-opacity cursor-pointer"
                   aria-label={isOpen ? 'Close menu' : 'Open menu'}
                 >
-                  {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
               </div>
             </div>
