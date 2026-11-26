@@ -69,14 +69,14 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-6 lg:inset-x-10 z-50 mx-auto max-w-7xl"
           >
-            {/* ── Translucent Liquid Glass Pill Container (Frosted Dark Glass) ── */}
+            {/* ── Translucent Liquid Glass Pill Container (Frosted White Glass) ── */}
             <div
               style={{
-                background: 'linear-gradient(170deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(15, 23, 42, 0.76) 100%)',
+                background: 'linear-gradient(170deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.80) 50%, rgba(255, 255, 255, 0.86) 100%)',
                 backdropFilter: 'blur(32px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-                border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45)',
+                border: '1.5px solid rgba(255, 255, 255, 0.9)',
+                boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.98)',
               }}
               className="rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between"
             >
@@ -95,10 +95,10 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                   />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="font-headline font-bold text-base sm:text-lg text-white tracking-tight">
+                  <span className="font-headline font-bold text-base sm:text-lg text-[#1E293B] tracking-tight">
                     Little Flowers
                   </span>
-                  <span className="text-[10px] uppercase tracking-widest text-amber-400 font-bold -mt-0.5">
+                  <span className="text-[10px] uppercase tracking-widest text-[#E91E63] font-bold -mt-0.5">
                     Academy
                   </span>
                 </div>
@@ -116,8 +116,8 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                         onClick={(e) => handleNavClick(e, href)}
                         className={`text-xs xl:text-sm font-semibold tracking-wide transition-all duration-200 px-3.5 py-1.5 rounded-full ${
                           isActive
-                            ? 'bg-white/25 text-white font-bold shadow-xs'
-                            : 'text-white/85 hover:text-white hover:bg-white/15'
+                            ? 'liquid-glass-pill-active text-[#E91E63] font-bold'
+                            : 'text-[#1E293B]/80 hover:text-[#1E293B] hover:bg-slate-900/5'
                         }`}
                       >
                         {label}
@@ -141,7 +141,7 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                 {/* Mobile Hamburger Button */}
                 <button
                   onClick={() => setIsOpen((v) => !v)}
-                  className="lg:hidden p-1.5 text-white hover:opacity-75 transition-opacity cursor-pointer"
+                  className="lg:hidden p-1.5 text-[#1E293B] hover:opacity-75 transition-opacity cursor-pointer"
                   aria-label={isOpen ? 'Close menu' : 'Open menu'}
                 >
                   {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
