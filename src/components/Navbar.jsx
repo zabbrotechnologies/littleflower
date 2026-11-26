@@ -158,7 +158,7 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-              className="absolute right-3 top-3 bottom-3 w-[85%] max-w-sm rounded-3xl liquid-glass-nav p-6 shadow-2xl flex flex-col justify-between"
+              className="fixed right-3 top-3 bottom-3 w-[calc(100%-1.5rem)] max-w-xs sm:max-w-sm rounded-3xl bg-white/95 backdrop-blur-2xl border border-white/80 p-5 sm:p-6 shadow-2xl flex flex-col justify-between overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div>
