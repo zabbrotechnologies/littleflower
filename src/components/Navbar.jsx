@@ -69,8 +69,17 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-6 lg:inset-x-10 z-50 mx-auto max-w-7xl"
           >
-            {/* ── Translucent Liquid Glass Pill Container (Matches Hero Navbar) ── */}
-            <div className="liquid-glass-nav-hero bg-slate-900/55 rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between">
+            {/* ── Translucent Liquid Glass Pill Container (Frosted Dark Glass) ── */}
+            <div
+              style={{
+                background: 'linear-gradient(170deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(15, 23, 42, 0.76) 100%)',
+                backdropFilter: 'blur(32px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45)',
+              }}
+              className="rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between"
+            >
               {/* Brand Logo & Title */}
               <a
                 href="#home"
