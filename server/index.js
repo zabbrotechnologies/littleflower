@@ -38,15 +38,16 @@ app.get('/api/health', async (req, res) => {
 
 // ── ADMIN AUTHENTICATION ──
 app.post('/api/admin/login', (req, res) => {
-  const { adminId, password } = req.body;
-  const expectedId = process.env.ADMIN_ID || 'admin';
-  const expectedPassword = process.env.ADMIN_PASSWORD || 'lfa@admin2026';
+  const cleanId = String(req.body?.adminId || '').trim().toLowerCase();
+  const cleanPass = String(req.body?.password || '').trim();
+  const expectedId = (process.env.ADMIN_ID || 'admin').trim().toLowerCase();
+  const expectedPassword = (process.env.ADMIN_PASSWORD || 'lfa@admin2026').trim();
 
-  if (adminId === expectedId && password === expectedPassword) {
+  if (cleanId === expectedId && cleanPass === expectedPassword) {
     return res.json({
       success: true,
       token: 'lfa_admin_session_' + Date.now(),
-      admin: { id: adminId, role: 'Super Admin' },
+      admin: { id: cleanId, role: 'Super Admin' },
     });
   }
 

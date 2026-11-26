@@ -15,12 +15,15 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
     setError('');
     setLoading(true);
 
+    const cleanId = adminId.trim();
+    const cleanPass = password.trim();
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3001');
       const res = await fetch(`${apiUrl}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminId, password }),
+        body: JSON.stringify({ adminId: cleanId, password: cleanPass }),
       });
 
       const data = await res.json();
@@ -87,6 +90,10 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
               <input
                 type="text"
                 required
+                autoCapitalize="none"
+                autoCorrect="off"
+                autoComplete="username"
+                spellCheck={false}
                 value={adminId}
                 onChange={(e) => setAdminId(e.target.value)}
                 placeholder="admin"
