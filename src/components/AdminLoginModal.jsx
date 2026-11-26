@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
+import { X, Lock, ShieldCheck, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [adminId, setAdminId] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -105,14 +106,25 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
               <label className="block text-xs font-medium text-[#172033] mb-1">
                 Password
               </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full px-3 py-2 rounded-lg border border-[#E8EDF3] bg-white text-xs text-[#172033] focus:outline-none focus:ring-1 focus:ring-[#4F46E5] focus:border-[#4F46E5]"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 pr-9 rounded-lg border border-[#E8EDF3] bg-white text-xs text-[#172033] focus:outline-none focus:ring-1 focus:ring-[#4F46E5] focus:border-[#4F46E5]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#172033] transition-colors cursor-pointer"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             <div className="pt-2">
