@@ -72,10 +72,10 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
             {/* ── Translucent Liquid Glass Pill Container (Frosted White Glass) ── */}
             <div
               style={{
-                background: 'linear-gradient(170deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.80) 50%, rgba(255, 255, 255, 0.86) 100%)',
-                backdropFilter: 'blur(32px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-                border: '1.5px solid rgba(255, 255, 255, 0.9)',
+                background: 'linear-gradient(170deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.56) 50%, rgba(255, 255, 255, 0.64) 100%)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1.5px solid rgba(255, 255, 255, 0.85)',
                 boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.98)',
               }}
               className="rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between"
