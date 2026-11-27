@@ -34,23 +34,23 @@ export default function Hero({ onAdminClick, onMenuClick }) {
       {/* ── Parallax Background Image Container ── */}
       <motion.div
         style={{ y: bgY, scale: bgScale }}
-        className="absolute -top-[10%] inset-x-0 h-[125%] z-0 pointer-events-none will-change-transform"
+        className="absolute inset-0 h-full lg:-top-[10%] lg:inset-x-0 lg:h-[125%] z-0 pointer-events-none will-change-transform"
       >
         <img
           src={heroBg}
           alt="Little Flowers Academy - Joyful, World-Class Early Learning"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-[68%_15%] lg:object-center"
         />
 
         {/* ── Cinematic Ambient Gradients for Crisp Readability ── */}
         {/* Top vignette */}
-        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/85 via-black/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-28 lg:h-44 bg-gradient-to-b from-black/75 via-black/30 to-transparent" />
 
         {/* Bottom deep gradient for headline and buttons */}
-        <div className="absolute inset-x-0 bottom-0 h-[78%] sm:h-[68%] bg-gradient-to-t from-[#0F172A]/95 via-black/55 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[62%] sm:h-[65%] lg:h-[68%] bg-gradient-to-t from-[#0F172A]/95 via-black/60 to-transparent" />
 
-        {/* Subtle overall dark film */}
-        <div className="absolute inset-0 bg-black/20" />
+        {/* Subtle overall dark film on desktop */}
+        <div className="absolute inset-0 bg-black/5 lg:bg-black/20" />
       </motion.div>
 
       {/* ── Top Full-Width Fixed-Style Translucent Glassy Navbar ── */}
@@ -189,12 +189,12 @@ export default function Hero({ onAdminClick, onMenuClick }) {
       </header>
 
       {/* Spacer for middle view of the image */}
-      <div className="flex-1 min-h-[60px] sm:min-h-[80px]" />
+      <div className="flex-1 min-h-[220px] sm:min-h-[180px] lg:min-h-[60px]" />
 
       {/* ── Main Hero Content Overlay (Bottom-aligned with subtle parallax) ── */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-24 sm:pb-32 lg:pb-36 will-change-transform"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-10 sm:pb-16 lg:pb-36 will-change-transform"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
           {/* ── LEFT SIDE: Main Headline, Subtitle & Dual Buttons (8 cols) ── */}
