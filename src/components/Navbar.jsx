@@ -67,19 +67,20 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -70, opacity: 0 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-6 lg:inset-x-10 z-50 mx-auto max-w-7xl"
+            className="fixed top-0 inset-x-0 w-full z-50"
           >
-            {/* ── Translucent Liquid Glass Pill Container (Frosted White Glass) ── */}
+            {/* ── Full-Width Translucent Glass Bar (Frosted White Glass) ── */}
             <div
               style={{
-                background: 'linear-gradient(170deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.56) 50%, rgba(255, 255, 255, 0.64) 100%)',
+                background: 'linear-gradient(170deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.60) 50%, rgba(255, 255, 255, 0.68) 100%)',
                 backdropFilter: 'blur(24px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1.5px solid rgba(255, 255, 255, 0.85)',
-                boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.98)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.85)',
+                boxShadow: '0 8px 30px -10px rgba(15, 23, 42, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.95)',
               }}
-              className="rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-4 sm:px-6 flex items-center justify-between"
+              className="w-full py-2.5 sm:py-3 px-4 sm:px-8"
             >
+              <div className="mx-auto max-w-7xl flex items-center justify-between">
               {/* Brand Logo & Title */}
               <a
                 href="#home"
@@ -146,6 +147,7 @@ export default function Navbar({ onAdminClick, isOpen: controlledOpen, setIsOpen
                 >
                   {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
+              </div>
               </div>
             </div>
           </motion.header>

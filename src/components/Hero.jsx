@@ -53,9 +53,9 @@ export default function Hero({ onAdminClick, onMenuClick }) {
         <div className="absolute inset-0 bg-black/20" />
       </motion.div>
 
-      {/* ── Top Floating Translucent Liquid Glassy Navbar ── */}
-      <header className="relative z-20 w-full pt-4 sm:pt-6 px-4 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl liquid-glass-nav-hero rounded-2xl sm:rounded-full py-2.5 sm:py-3 px-5 sm:px-7 flex items-center justify-between">
+      {/* ── Top Full-Width Fixed-Style Translucent Glassy Navbar ── */}
+      <header className="relative z-20 w-full liquid-glass-nav-hero border-x-0 border-t-0">
+        <div className="mx-auto max-w-7xl py-2.5 sm:py-3 px-4 sm:px-8 flex items-center justify-between">
           {/* Left: Brand Logo & Title */}
           <a
             href="#home"
