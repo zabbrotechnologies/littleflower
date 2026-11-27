@@ -189,12 +189,12 @@ export default function Hero({ onAdminClick, onMenuClick }) {
       </header>
 
       {/* Spacer for middle view of the image */}
-      <div className="flex-1 min-h-[140px]" />
+      <div className="flex-1 min-h-[60px] sm:min-h-[80px]" />
 
       {/* ── Main Hero Content Overlay (Bottom-aligned with subtle parallax) ── */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-16 sm:pb-24 lg:pb-28 will-change-transform"
+        className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-24 sm:pb-32 lg:pb-36 will-change-transform"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
           {/* ── LEFT SIDE: Main Headline, Subtitle & Dual Buttons (8 cols) ── */}
