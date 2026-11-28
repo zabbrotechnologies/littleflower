@@ -206,7 +206,7 @@ export default function Hero({ onAdminClick, onMenuClick }) {
           >
             {/* Primary Headline (Two-Tone Colorful Fredoka Style) */}
             <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold tracking-tight leading-[1.12] drop-shadow-md">
-              <span className="text-white">Elevate your child&apos;s future </span>
+              <span className="text-[#A855F7]">Elevate your child&apos;s future </span>
               <span className="text-[#FF7E47]">with world-class </span>
               <span className="text-[#FBBF24]">creative education.</span>
             </h1>
