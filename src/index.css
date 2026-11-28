@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Typography - Quicksand (Headings) & Plus Jakarta Sans (Body/Nav) */
-  --font-display: 'Quicksand', sans-serif;
-  --font-headline: 'Quicksand', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
-  --font-nav: 'Plus Jakarta Sans', sans-serif;
+  /* Brand Typography - Fredoka (Headings), Nunito (Body), Nunito Sans (Labels), Georgia (Serif) */
+  --font-display: 'Fredoka', sans-serif;
+  --font-headline: 'Fredoka', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-nav: 'Nunito Sans', sans-serif;
+  --font-label: 'Nunito Sans', sans-serif;
+  --font-serif: Georgia, serif;
 
   /* Official Brand Palette from Design Spec:
      Primary: #E91E63 (Hot Pink / Magenta)
