@@ -4,6 +4,7 @@
   /* Brand Typography - Fredoka (Headings), Nunito (Body), Nunito Sans (Labels), Georgia (Serif) */
   --font-display: 'Fredoka', sans-serif;
   --font-headline: 'Fredoka', sans-serif;
+  --font-sans: 'Nunito', sans-serif;
   --font-body: 'Nunito', sans-serif;
   --font-nav: 'Nunito Sans', sans-serif;
   --font-label: 'Nunito Sans', sans-serif;
@@ -80,8 +81,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, .font-headline, .font-display {
+h1, h2, h3, h4, h5, h6, .font-headline, .font-display {
   font-family: var(--font-display);
+}
+
+label, button, nav, nav a, .font-nav, .font-label {
+  font-family: var(--font-label);
+}
+
+blockquote, .font-serif {
+  font-family: var(--font-serif);
 }
 
 /* Liquid Glassmorphism Core Classes */
