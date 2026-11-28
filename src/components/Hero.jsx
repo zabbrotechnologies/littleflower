@@ -204,9 +204,11 @@ export default function Hero({ onAdminClick, onMenuClick }) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-8 max-w-2xl"
           >
-            {/* Primary Headline */}
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-white tracking-tight leading-[1.12]">
-              Elevate your child&apos;s future with world-class creative education.
+            {/* Primary Headline (Two-Tone Colorful Fredoka Style) */}
+            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold tracking-tight leading-[1.12] drop-shadow-md">
+              <span className="text-white">Elevate your child&apos;s future </span>
+              <span className="text-[#FF7E47]">with world-class </span>
+              <span className="text-[#FBBF24]">creative education.</span>
             </h1>
 
             {/* Subtitle */}
